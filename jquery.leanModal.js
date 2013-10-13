@@ -2,71 +2,76 @@
  
     $.fn.extend({ 
          
-        leanModal: function(options) {
- 
-            var defaults = {
-                top: '100px',
-                overlay: 0.5,
-                closeButton: null,
-                attr: 'href'
-            }
-            
-            var overlay = $("<div id='lean_overlay'></div>");
-            
-            $("body").append(overlay);
-                 
-            options =  $.extend(defaults, options);
- 
-            return this.each(function() {
-            
-                var o = options;
-               
-                $(this).click(function(e) {
-              
-              	var modal_id = $(this).attr(o.attr);
+        leanModal: function(options) {        
 
-				$("#lean_overlay").click(function() { 
-                     close_modal(modal_id);                    
-                });
+            // methods
+            // -------
+
+            this.init = function(options) {
+
+                var _this = this;                
+
+                this.options = $.extend({
+                    top: '100px',
+                    overlay: 0.5,
+                    closeButton: null,
+                    attr: 'href'
+                }, options);
                 
-                $(o.closeButton).click(function() { 
-                     close_modal(modal_id);                    
+                $('#lean_overlay').remove();
+                $("body").append("<div id='lean_overlay'></div>"); 
+
+                this.each(function() {
+                    $(this).click(function(e) {
+                        _this.show_modal($($(this).attr(_this.options.attr)));
+                        e.preventDefault();
+                    });
                 });
-                         	
-              	var modal_height = $(modal_id).outerHeight();
-        	  	var modal_width = $(modal_id).outerWidth();
 
-        		$('#lean_overlay').css({ 'display' : 'block', opacity : 0 });
+            };            
 
-        		$('#lean_overlay').fadeTo(200,o.overlay);
+            this.show_modal = function($selector) {
 
-        		$(modal_id).css({ 
-        		
-        			'display' : 'block',
-        			'position' : 'fixed',
-        			'opacity' : 0,
-        			'z-index': 11000,
-        			'left' : 50 + '%',
-        			'margin-left' : -(modal_width/2) + "px",
-        			'top' :  typeof o.top === 'number' ? o.top + 'px' : o.top
-        		
-        		});
+                // vars
+                var _this = this,
+                    modal_height = $selector.outerHeight(),
+                    modal_width = $selector.outerWidth();
+                
+                // close button
+                $(options.closeButton).click(function() { _this.close_modal($selector); });
 
-        		$(modal_id).fadeTo(200,1);
+                // overlay
+                $('#lean_overlay')  .css({ display: 'block', opacity: 0 })
+                                    .fadeTo(200,this.options.overlay)
+                                    .click(function() { 
+                                         _this.close_modal($selector);                    
+                                    });                                    
+                // actual modal
+                $selector   .css({ 
+                                'display'       : 'block',
+                                'position'      : 'fixed',
+                                'opacity'       : 0,
+                                'z-index'       : 11000,
+                                'left'          : '50%',
+                                'margin-left'   : -(modal_width/2) + "px",
+                                'top'           :  typeof this.options.top === 'number' ? this.options.top + 'px' : this.options.top
+                            })
+                            .fadeTo(200,1);
 
-                e.preventDefault();
-                		
-              	});
-             
-            });
+            };
 
-			function close_modal(modal_id){
+            this.close_modal = function($selector) {
+                $("#lean_overlay").fadeOut(200);
+                $selector.css({ 'display' : 'none' });
+            };
 
-        		$("#lean_overlay").fadeOut(200);
+            // Init
+            // ----
 
-        		$(modal_id).css({ 'display' : 'none' });
-			
-			}
+            this.init(options);            
+
+            // keep it chainable
+            return this;           
     
         }
     });
