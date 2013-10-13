@@ -5,9 +5,10 @@
         leanModal: function(options) {
  
             var defaults = {
-                top: 100,
+                top: '100px',
                 overlay: 0.5,
-                closeButton: null
+                closeButton: null,
+                attr: 'href'
             }
             
             var overlay = $("<div id='lean_overlay'></div>");
@@ -22,7 +23,7 @@
                
                 $(this).click(function(e) {
               
-              	var modal_id = $(this).attr("href");
+              	var modal_id = $(this).attr(o.attr);
 
 				$("#lean_overlay").click(function() { 
                      close_modal(modal_id);                    
@@ -47,7 +48,7 @@
         			'z-index': 11000,
         			'left' : 50 + '%',
         			'margin-left' : -(modal_width/2) + "px",
-        			'top' : o.top + "px"
+        			'top' :  typeof o.top === 'number' ? o.top + 'px' : o.top
         		
         		});
 
