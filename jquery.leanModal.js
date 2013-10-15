@@ -88,8 +88,8 @@
                 $selector.css({ 'display' : 'none' });
 
                 // call back
-                var b_func = this.options.onBeforeClose
-                if (typeof b_func == 'function') b_func();;
+                var a_func = this.options.onAfterClose;
+                if (typeof a_func == 'function') a_func();
 
             };
 
