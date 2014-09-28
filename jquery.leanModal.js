@@ -27,8 +27,6 @@
                         'z-index'           : 0
                     },
                     cssOverlayVisible: {
-                        'display'           : 'block',
-                        'position'          : 'fixed',
                         'opacity'           : 0.5,
                         'z-index'           : 11000
                     },
@@ -41,8 +39,6 @@
                         'z-index'           : 0
                     },
                     cssModalVisible: {
-                        'display'           : 'block',
-                        'position'          : 'absolute',
                         'opacity'           : 1,
                         'z-index'           : 11001
                     },
@@ -162,8 +158,8 @@
 
                     // actual modal
                     $('#lean_modal')
-                        .css(this.options.cssOverlayVisible)
-                        .animate(this.options.cssOverlayHidden, this.options.transitionTime, function() { $('#lean_modal').hide(); });
+                        .css(this.options.cssModalVisible)
+                        .animate(this.options.cssModalHidden, this.options.transitionTime, function() { $('#lean_modal').hide(); });
 
                 }
 

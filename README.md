@@ -46,8 +46,6 @@ Options
         'z-index'           : 0
     },
     cssOverlayVisible: {
-        'display'           : 'block',
-        'position'          : 'fixed',
         'opacity'           : 0.5,
         'z-index'           : 11000
     },
@@ -60,8 +58,6 @@ Options
         'z-index'           : 0
     },
     cssModalVisible: {
-        'display'           : 'block',
-        'position'          : 'absolute',
         'opacity'           : 1,
         'z-index'           : 11001
     },
