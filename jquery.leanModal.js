@@ -1,8 +1,8 @@
 (function($){
- 
-    $.fn.extend({ 
-         
-        leanModal: function(options) {        
+
+    $.fn.extend({
+
+        leanModal: function(options) {
 
             // methods
             // -------
@@ -10,34 +10,68 @@
             this.init = function(options) {
 
                 // bind this to a local var with a diff name
-                var _this = this;                
+                var _this = this;
 
                 // configure
                 this.options = $.extend({
-                    top: '100px',
-                    overlay: 0.5,
+                    center: true,
                     closeButton: null,
                     attr: 'href',
+                    transitionTime: 300,
+                    classSwitchOnly: false,
+                    cssOverlayHidden: {
+                        'display'           : 'block',
+                        'position'          : 'fixed',
+                        'background-color'  : '#000000',
+                        'opacity'           : 0,
+                        'z-index'           : 0
+                    },
+                    cssOverlayVisible: {
+                        'display'           : 'block',
+                        'position'          : 'fixed',
+                        'opacity'           : 0.5,
+                        'z-index'           : 11000
+                    },
+                    cssModalHidden: {
+                        'display'           : 'block',
+                        'position'          : 'absolute',
+                        'background-color'  : '#ffffff',
+                        'top'               : '100px',
+                        'opacity'           : 0,
+                        'z-index'           : 0
+                    },
+                    cssModalVisible: {
+                        'display'           : 'block',
+                        'position'          : 'absolute',
+                        'opacity'           : 1,
+                        'z-index'           : 11001
+                    },
                     eventType: 'click',
                     onBeforeClose: null,
                     onAfterClose: null,
                     onBeforeShow: null,
-                    onAfterShow: null                    
+                    onAfterShow: null
                 }, options);
-                
-                // remove the overlay if present and add a new one
-                $('#lean_overlay').remove();
-                $("body").append("<div id='lean_overlay'></div>"); 
+
+                // add the overlay if required
+                if (!$('#lean_wrap').length) {
+                    $("body").append('<div id="lean_wrap"><div id="lean_overlay"></div><div id="lean_modal"></div></div>');
+                    if (!this.options.classSwitchOnly) {
+                        $('#lean_overlay').css(this.options.cssOverlayHidden).hide();
+                        $('#lean_modal').css(this.options.cssModalHidden).hide();
+                    }
+                }
 
                 // Bind the modal to show to a click
                 this.each(function() {
                     $(this).on(_this.options.eventType, function(e) {
-                        _this.show_modal($($(this).attr(_this.options.attr)));
+                        $elem = $($(this).attr(_this.options.attr));
+                        _this.show_modal($elem);
                         e.preventDefault();
                     });
                 });
 
-            };            
+            };
 
             this.show_modal = function($selector) {
 
@@ -47,45 +81,91 @@
 
                 // vars
                 var _this = this,
-                    modal_height = $selector.outerHeight(),
-                    modal_width = $selector.outerWidth();
-                
+                    $lean_modal = $('#lean_modal');
+
+                // Inject the Content
+                $('#lean_modal').html($selector.html());
+
                 // close button
-                $(options.closeButton).click(function() { _this.close_modal($selector); });
+                $(options.closeButton).on('click', function() { _this.close_modal(); });
+
+                // should we center?
+                if (!this.options.classSwitchOnly) {
+                    if (this.options.center) {
+
+                        var modal_height = $lean_modal.outerHeight(),
+                            modal_width = $lean_modal.outerWidth();
+
+                        this.options.cssModalHidden = $.extend(this.options.cssModalHidden, {
+                            'left'          : '50%',
+                            'margin-left'   : -(modal_width/2) + "px"
+                        });
+
+                    }
+                }
+
+                // body
+                $('body').addClass('lean-modal-active');
 
                 // overlay
-                $('#lean_overlay')  .css({ display: 'block', opacity: 0 })
-                                    .fadeTo(200,this.options.overlay)
-                                    .click(function() { 
-                                         _this.close_modal($selector);                    
-                                    });                                    
+                $('#lean_overlay')
+                    .addClass('lean-overlay-visible')
+                    .on('click', function() { _this.close_modal($selector); });
+
                 // actual modal
-                $selector   .css({ 
-                                'display'       : 'block',
-                                'position'      : 'fixed',
-                                'opacity'       : 0,
-                                'z-index'       : 11000,
-                                'left'          : '50%',
-                                'margin-left'   : -(modal_width/2) + "px",
-                                'top'           :  typeof this.options.top === 'number' ? this.options.top + 'px' : this.options.top
-                            })
-                            .fadeTo(200,1);
+                $('#lean_modal')
+                    .addClass('lean-modal-visible');
+
+                if (!this.options.classSwitchOnly) {
+
+                    // overlay
+                    $('#lean_overlay')
+                        .css(this.options.cssOverlayHidden)
+                        .show()
+                        .animate(this.options.cssOverlayVisible, this.options.transitionTime);
+
+                    // actual modal
+                    $('#lean_modal')
+                        .css(this.options.cssModalHidden)
+                        .show()
+                        .animate(this.options.cssModalVisible, this.options.transitionTime);
+
+                }
 
                 // call back
                 var a_func = this.options.onAfterShow;
-                if (typeof a_func == 'function') a_func();                            
+                if (typeof a_func == 'function') a_func();
 
             };
 
-            this.close_modal = function($selector) {
+            this.close_modal = function() {
 
                 // call back
                 var b_func = this.options.onBeforeClose;
                 if (typeof b_func == 'function') b_func();
 
-                // close it
-                $("#lean_overlay").fadeOut(200);
-                $selector.css({ 'display' : 'none' });
+                // body
+                $('body').removeClass('lean-modal-active');
+
+                // close overlay
+                $("#lean_overlay").removeClass('lean-overlay-visible');
+
+                // close modal
+                $('#lean_modal').removeClass('lean-modal-visible');
+
+                if (!this.options.classSwitchOnly) {
+
+                    // overlay
+                    $('#lean_overlay')
+                        .css(this.options.cssOverlayVisible)
+                        .animate(this.options.cssOverlayHidden, this.options.transitionTime, function() { $('#lean_overlay').hide(); });
+
+                    // actual modal
+                    $('#lean_modal')
+                        .css(this.options.cssOverlayVisible)
+                        .animate(this.options.cssOverlayHidden, this.options.transitionTime, function() { $('#lean_modal').hide(); });
+
+                }
 
                 // call back
                 var a_func = this.options.onAfterClose;
@@ -96,12 +176,12 @@
             // Init
             // ----
 
-            this.init(options);            
+            this.init(options);
 
             // keep it chainable
-            return this;           
-    
+            return this;
+
         }
     });
-     
+
 })(jQuery);
