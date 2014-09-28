@@ -75,19 +75,16 @@
 
             this.show_modal = function($selector) {
 
-                // call back
-                var b_func = this.options.onBeforeShow;
-                if (typeof b_func == 'function') b_func();
-
                 // vars
                 var _this = this,
                     $lean_modal = $('#lean_modal');
 
+                // call back
+                var b_func = this.options.onBeforeShow;
+                if (typeof b_func == 'function') b_func(_this, $selector);
+
                 // Inject the Content
                 $('#lean_modal').html($selector.html());
-
-                // close button
-                $(options.closeButton).on('click', function() { _this.close_modal(); });
 
                 // should we center?
                 if (!this.options.classSwitchOnly) {
@@ -134,7 +131,10 @@
 
                 // call back
                 var a_func = this.options.onAfterShow;
-                if (typeof a_func == 'function') a_func();
+                if (typeof a_func == 'function') a_func(this, $selector);
+
+                // close button
+                $(options.closeButton).on('click', function() { _this.close_modal(); });
 
             };
 
@@ -142,7 +142,7 @@
 
                 // call back
                 var b_func = this.options.onBeforeClose;
-                if (typeof b_func == 'function') b_func();
+                if (typeof b_func == 'function') b_func(this);
 
                 // body
                 $('body').removeClass('lean-modal-active');
@@ -169,7 +169,7 @@
 
                 // call back
                 var a_func = this.options.onAfterClose;
-                if (typeof a_func == 'function') a_func();
+                if (typeof a_func == 'function') a_func(this);
 
             };
 
