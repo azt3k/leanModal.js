@@ -5,9 +5,9 @@ that you may want to handle in a modal window. Designed to handle hidden
 content, and doesn’t apply any styles to the target element, other than for
 displaying and positioning.
 
-–
+Example Usage
+-------------
 
-Example Usage:
 
 ````javascript
 $('body').append(
@@ -28,7 +28,7 @@ $('<a data-modal="#video-iframe"></a>') .leanModal({attr: 'data-modal' })
 
 
 Options
---------
+-------
 
 
 ````json
