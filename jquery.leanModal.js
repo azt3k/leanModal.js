@@ -141,6 +141,9 @@
                 var b_func = this.options.onBeforeClose;
                 if (typeof b_func == 'function') b_func(this);
 
+                // vars
+                var _this = this;
+
                 // body
                 $('body').removeClass('lean-modal-active');
 
@@ -155,12 +158,12 @@
                     // overlay
                     $('#' + this.options.prefix + '_overlay')
                         .css(this.options.cssOverlayVisible)
-                        .animate(this.options.cssOverlayHidden, this.options.transitionTime, function() { $('#' + this.options.prefix + '_overlay').hide(); });
+                        .animate(this.options.cssOverlayHidden, this.options.transitionTime, function() { $('#' + _this.options.prefix + '_overlay').hide(); });
 
                     // actual modal
                     $('#' + this.options.prefix + '_modal')
                         .css(this.options.cssModalVisible)
-                        .animate(this.options.cssModalHidden, this.options.transitionTime, function() { $('#' + this.options.prefix + '_modal').hide(); });
+                        .animate(this.options.cssModalHidden, this.options.transitionTime, function() { $('#' + _this.options.prefix + '_modal').hide(); });
 
                 }
 
