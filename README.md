@@ -36,6 +36,7 @@ Options
     center: true,
     closeButton: null,
     attr: 'href',
+    prefix: 'lean',
     transitionTime: 300,
     classSwitchOnly: false,
     cssOverlayHidden: {
@@ -68,4 +69,3 @@ Options
     onAfterShow: null
 }
 ````
-

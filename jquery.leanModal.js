@@ -17,6 +17,7 @@
                     center: true,
                     closeButton: null,
                     attr: 'href',
+                    prefix: 'lean',
                     transitionTime: 300,
                     classSwitchOnly: false,
                     cssOverlayHidden: {
@@ -50,11 +51,11 @@
                 }, options);
 
                 // add the overlay if required
-                if (!$('#lean_wrap').length) {
-                    $("body").append('<div id="lean_wrap"><div id="lean_overlay"></div><div id="lean_modal"></div></div>');
+                if (!$('#' + this.options.prefix + '_wrap').length) {
+                    $("body").append('<div id="' + this.options.prefix + '_wrap" class="lean_wrap"><div id="' + this.options.prefix + '_overlay" class="lean_overlay"></div><div id="' + this.options.prefix + '_modal" class="lean_modal"></div></div>');
                     if (!this.options.classSwitchOnly) {
-                        $('#lean_overlay').css(this.options.cssOverlayHidden).hide();
-                        $('#lean_modal').css(this.options.cssModalHidden).hide();
+                        $('#' + this.options.prefix + '_overlay').css(this.options.cssOverlayHidden).hide();
+                        $('#' + this.options.prefix + '_modal').css(this.options.cssModalHidden).hide();
                     }
                 }
 
@@ -73,14 +74,14 @@
 
                 // vars
                 var _this = this,
-                    $lean_modal = $('#lean_modal');
+                    $lean_modal = $('#' + this.options.prefix + '_modal');
 
                 // call back
                 var b_func = this.options.onBeforeShow;
                 if (typeof b_func == 'function') b_func(_this, $selector);
 
                 // Inject the Content
-                $('#lean_modal').html($selector.html());
+                $('#' + this.options.prefix + '_modal').html($selector.html());
 
                 // should we center?
                 if (!this.options.classSwitchOnly) {
@@ -101,24 +102,24 @@
                 $('body').addClass('lean-modal-active');
 
                 // overlay
-                $('#lean_overlay')
+                $('#' + this.options.prefix + '_overlay')
                     .addClass('lean-overlay-visible')
                     .on('click', function() { _this.close_modal($selector); });
 
                 // actual modal
-                $('#lean_modal')
+                $('#' + this.options.prefix + '_modal')
                     .addClass('lean-modal-visible');
 
                 if (!this.options.classSwitchOnly) {
 
                     // overlay
-                    $('#lean_overlay')
+                    $('#' + this.options.prefix + '_overlay')
                         .css(this.options.cssOverlayHidden)
                         .show()
                         .animate(this.options.cssOverlayVisible, this.options.transitionTime);
 
                     // actual modal
-                    $('#lean_modal')
+                    $('#' + this.options.prefix + '_modal')
                         .css(this.options.cssModalHidden)
                         .show()
                         .animate(this.options.cssModalVisible, this.options.transitionTime);
@@ -144,22 +145,22 @@
                 $('body').removeClass('lean-modal-active');
 
                 // close overlay
-                $("#lean_overlay").removeClass('lean-overlay-visible');
+                $('#' + this.options.prefix + '_overlay').removeClass('lean-overlay-visible');
 
                 // close modal
-                $('#lean_modal').removeClass('lean-modal-visible');
+                $('#' + this.options.prefix + '_modal').removeClass('lean-modal-visible');
 
                 if (!this.options.classSwitchOnly) {
 
                     // overlay
-                    $('#lean_overlay')
+                    $('#' + this.options.prefix + '_overlay')
                         .css(this.options.cssOverlayVisible)
-                        .animate(this.options.cssOverlayHidden, this.options.transitionTime, function() { $('#lean_overlay').hide(); });
+                        .animate(this.options.cssOverlayHidden, this.options.transitionTime, function() { $('#' + this.options.prefix + '_overlay').hide(); });
 
                     // actual modal
-                    $('#lean_modal')
+                    $('#' + this.options.prefix + '_modal')
                         .css(this.options.cssModalVisible)
-                        .animate(this.options.cssModalHidden, this.options.transitionTime, function() { $('#lean_modal').hide(); });
+                        .animate(this.options.cssModalHidden, this.options.transitionTime, function() { $('#' + this.options.prefix + '_modal').hide(); });
 
                 }
 
